@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "db4free.net",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "Ticket.io",
+            "database": "pticketio",
+            "username": "ticketio",
+            "password": "oitekcit"
+        }
+    ]
+}
