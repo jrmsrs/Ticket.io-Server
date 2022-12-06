@@ -21,7 +21,7 @@ Clara Thais, Arlindo Soares, Renan Lima, Yuri Campos, Mariana Duarte
 
 ### Pré-requisito
 - [Node.js](https://nodejs.org/pt-br/) instalado na máquina
-- MySQL/MariaDB ([scripts](./mysqlScript.sql))
+- MySQL/MariaDB ([scripts](./scripts.sql))
 
 ### Instalação
 Na pasta do projeto, execute o comando:
