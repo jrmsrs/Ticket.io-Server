@@ -8,7 +8,7 @@ var pool = mysql.createPool({
     "database": process.env.MYSQL_DATABASE,
     "user": process.env.MYSQL_USER,
     "password": process.env.MYSQL_PASSWORD,
-    timezone: 'utc',
+    timezone: 'gmt+3',
     multipleStatements: true,
     connectionLimit: 10,
     acquireTimeout:6000000
