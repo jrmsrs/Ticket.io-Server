@@ -1,23 +1,20 @@
-# Ticket.io Server
+###### <p align="center">[Projetos e Construção de Sistemas 2022.2](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2)</p>
 
 <img src="logo-light.png#gh-light-mode-only" alt="logo" style="width:100%">
 <img src="logo-dark.png#gh-dark-mode-only" alt="logo" style="width:100%">
 
-Api ainda no início, ~~nenhuma segurança~~ e banco de dados incompleto
+###  [Repositório Backend 🖥️](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Server) | [Repositório Frontend 💻](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Client)
 
-## Grupo 3
+## 👥 Grupo 3 
 Clara Thais, Arlindo Soares, Renan Lima, Yuri Campos, Mariana Duarte
 
-## Repositório client side
-[https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Client](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Client)
-
-## Protótipo do projeto
+## ✏️ Protótipo do projeto
 [https://balsamiq.cloud/sm9h52j/pbcq60x/r6B5C](https://balsamiq.cloud/sm9h52j/pbcq60x/r6B5C)
 
-## Implementação do projeto
+## 🌎 Implementação do projeto
 [https://ticket-io-front-git-dev-jrmsrs.vercel.app](https://ticket-io-front-git-dev-jrmsrs.vercel.app)
 
-## Guia
+## ❓ Guia
 
 ### Pré-requisito
 - [Node.js](https://nodejs.org/pt-br/) instalado na máquina
@@ -53,34 +50,34 @@ Na pasta do projeto, execute o comando:
 
 O servidor rodará em [http://localhost:5000/](http://localhost:5000)X. Irá recarregar e se reconectar com o banco sempre que houver mudança em algum arquivo.
 
-## Requisições
+## 🖥️ Requisições
 
 ### Usuários
 
 - Obter usuários:  
-(get) `localhost:5000/user`
+(get) `/user`
 - Obter usuário por ID:  
-(get) `localhost:5000/user/UUID`
+(get) `/user/UUID`
 - Obter usuário por e-mail:  
-(get) `localhost:5000/user?email=EMAIL`
+(get) `/user?email=EMAIL`
 - Cadastrar usuário  
-(post) `localhost:5000/user`
+(post) `/user`
 - Alterar usuário  
-(patch) `localhost:5000/user/UUID`
+(patch) `/user/UUID`
 - Remover usuário  
-(remove) `localhost:5000/user/UUID`
+(remove) `/user/UUID`
 
 ### Grupos solucionadores
 
 - Obter grupos solucionadores  
-(get) `localhost:5000/group`
+(get) `/group`
 - Obter grupo solucionador  
-(get) `localhost:5000/group/UUID`
+(get) `/group/UUID`
 - Obter membros de um grupo solucionador  
-(get) `localhost:5000/group/UUID?members=true`
+(get) `/group/UUID?members=true`
 - Cadastrar grupo solucionador  
-(post) `localhost:5000/group`
+(post) `/group`
 - Alterar grupo solucionador  
-(patch) `localhost:5000/group/UUID`
+(patch) `/group/UUID`
 - Remover grupo solucionador  
-(remove) `localhost:5000/group/UUID`
+(remove) `/group/UUID`
