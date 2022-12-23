@@ -1,7 +1,7 @@
 ###### <p align="center">[Projetos e Construção de Sistemas 2022.2](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2)</p>
 
-<img src="logo-light.png#gh-light-mode-only" alt="logo" style="width:100%">
-<img src="logo-dark.png#gh-dark-mode-only" alt="logo" style="width:100%">
+<img src="./logo-light.png#gh-light-mode-only" alt="logo" style="width:100%">
+<img src="./logo-dark.png#gh-dark-mode-only" alt="logo" style="width:100%">
 
 ###  [Repositório Backend 🖥️](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Server) | [Repositório Frontend 💻](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Client)
 
@@ -53,7 +53,6 @@ O servidor rodará em [http://localhost:5000/](http://localhost:5000)X. Irá rec
 ## 🖥️ Requisições
 
 ### Usuários
-
 - Obter usuários:  
 (get) `/user`
 - Obter usuário por ID:  
@@ -65,10 +64,9 @@ O servidor rodará em [http://localhost:5000/](http://localhost:5000)X. Irá rec
 - Alterar usuário  
 (patch) `/user/UUID`
 - Remover usuário  
-(remove) `/user/UUID`
+(delete) `/user/UUID`
 
 ### Grupos solucionadores
-
 - Obter grupos solucionadores  
 (get) `/group`
 - Obter grupo solucionador  
@@ -80,4 +78,16 @@ O servidor rodará em [http://localhost:5000/](http://localhost:5000)X. Irá rec
 - Alterar grupo solucionador  
 (patch) `/group/UUID`
 - Remover grupo solucionador  
-(remove) `/group/UUID`
+(delete) `/group/UUID`
+
+### Tickets de Problema (a implementar)
+- Obter TPs 
+(get) `/issue`
+- Obter TP
+(get) `/issue/UUID`
+- Cadastrar TP
+(post) `/issue`
+- Alterar TP 
+(patch) `/issue/UUID`
+- Remover TP 
+(delete) `/issue/UUID`

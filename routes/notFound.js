@@ -12,7 +12,10 @@ router.use((error, req, res, next) => {
     error: {
       message: error.message,
     },
-    rotas: ["http://" + req.host + "/user", "http://" + req.host + "/group"],
+    rotas: [
+      "https://" + req.hostname + "/user",
+      "https://" + req.hostname + "/group",
+    ],
   });
 });
 
