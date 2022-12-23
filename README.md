@@ -80,7 +80,7 @@ O servidor rodará em [http://localhost:5000/](http://localhost:5000)X. Irá rec
 - Remover grupo solucionador  
 (delete) `/group/UUID`
 
-### Tickets de Problema (a implementar)
+### Tickets de Problema
 - Obter TPs 
 (get) `/issue`
 - Obter TP
