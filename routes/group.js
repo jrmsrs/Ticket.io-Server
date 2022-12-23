@@ -8,7 +8,7 @@ router.post('/', (req,res,next) => {
         uuid: crypto.randomUUID(),
         name: req.body.name,
         users: req.body.users,
-    }
+    } 
     let sqlQuery = `INSERT INTO \`group\` (id, name) VALUES ('${group.uuid}','${group.name}'); `
     group.users.forEach(userId => {
         sqlQuery += `INSERT INTO group_users (group_id, user_id) VALUES ('${group.uuid}', '${userId}'); `
@@ -165,6 +165,5 @@ router.delete('/:id', (req,res,next) => {
         )
     })
 })
-
 
 module.exports = router
