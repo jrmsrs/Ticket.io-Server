@@ -93,7 +93,7 @@ router.get('/:id', (req,res,next) => {
                 } 
                 return res.status(200).send({
                     message: "dados do grupo",
-                    results: result
+                    results: result[0]
                 })
             }
         )
