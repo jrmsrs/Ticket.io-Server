@@ -8,10 +8,9 @@ var pool = mysql.createPool({
   database: process.env.MYSQL_DATABASE,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
-  //timezone: 'gmt+3',
   multipleStatements: true,
-  //connectionLimit: 10,
-  //acquireTimeout:6000000
+  connectionLimit: 10,
+  acquireTimeout:6000000
 });
 // Testar db
 // pool.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
