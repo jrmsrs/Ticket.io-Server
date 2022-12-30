@@ -10,6 +10,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "~4.16.1",
+    "lerolero": "github:jrmsrs/lerolero",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1"
   },

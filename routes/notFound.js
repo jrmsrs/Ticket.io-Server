@@ -15,6 +15,8 @@ router.use((error, req, res, next) => {
     rotas: [
       "https://" + req.hostname + "/user",
       "https://" + req.hostname + "/group",
+      "https://" + req.hostname + "/issue",
+      "https://" + req.hostname + "/lero",
     ],
   });
 });
