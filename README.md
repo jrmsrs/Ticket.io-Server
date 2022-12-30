@@ -81,13 +81,17 @@ O servidor rodará em [http://localhost:5000/](http://localhost:5000)X. Irá rec
 (delete) `/group/UUID`
 
 ### Tickets de Problema
-- Obter TPs 
+- Obter TPs  
 (get) `/issue`
-- Obter TP
+- Obter TP  
 (get) `/issue/UUID`
-- Cadastrar TP
+- Cadastrar TP  
 (post) `/issue`
-- Alterar TP 
+- Alterar TP  
 (patch) `/issue/UUID`
-- Remover TP 
+- Remover TP  
 (delete) `/issue/UUID`
+
+### Outras APIs
+- Lerolero (fork)  
+(get) `/lero`

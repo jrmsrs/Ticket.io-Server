@@ -6,6 +6,7 @@ const app = express();
 const routeUser = require("./routes/user");
 const routeGroup = require("./routes/group");
 const routeIssue = require("./routes/issue");
+const routeLero = require("./routes/lero");
 
 const routeNotFound = require("./routes/notFound");
 
@@ -30,6 +31,7 @@ app.use(morgan("dev"));
 app.use("/user", routeUser);
 app.use("/group", routeGroup);
 app.use("/issue", routeIssue);
+app.use("/lero", routeLero);
 app.use(routeNotFound);
 
 module.exports = app;
