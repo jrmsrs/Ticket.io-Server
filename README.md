@@ -33,11 +33,17 @@ Crie um arquivo '.env'
 Coloque as variáveis de ambiente locais nesse arquivo seguindo o template:
 
 ```
+HOST=http://localhost:5000
+
 MYSQL_HOST=
 MYSQL_PORT=
 MYSQL_DATABASE=
 MYSQL_USER=
 MYSQL_PASSWORD=
+
+# Opcional - Credenciais SMTP para envio de e-mails de relatórios gerenciais
+SMTP_USER=
+SMTP_PASS=
 ```
 
 O projeto estará pronto para ser compilado.
@@ -91,6 +97,11 @@ O servidor rodará em [http://localhost:5000/](http://localhost:5000)X. Irá rec
 (patch) `/issue/UUID`
 - Remover TP  
 (delete) `/issue/UUID`
+
+### Relatórios gerenciais
+- Envio para um e-mail específico (ou array)  
+(get) `/report?email=EMAIL`  
+(get) `/report?email=EMAIL1&email=EMAIL2&email=EMAIL3`  
 
 ### Outras APIs
 - Lerolero (fork)  
