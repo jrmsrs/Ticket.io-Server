@@ -142,4 +142,24 @@ router.post("/", (req, res, next) => {
   });
 })
 
+router.patch("/", (req, res, next) => {
+  const cron = req.body.cron 
+  mysql.getConnection((error, conn) => {
+    if (error) return res.sendStatus(400);
+    conn.query(`UPDATE \`report\` SET \`cron\` = "${cron}" WHERE id=1`, (error, result, fields) => {
+      conn.release();
+      if (error) {
+        return res.status(500).send({
+          error: error,
+          response: null,
+        });
+      }
+      return res.status(201).send({
+        message: "cron atualizado",
+        id: result.id,
+      });
+    })
+  })
+})
+
 module.exports = router
