@@ -13,11 +13,11 @@ router.use((error, req, res, next) => {
       message: error.message,
     },
     rotas: [
-      process.env.HOST+ "/user",
-      process.env.HOST+ "/group",
-      process.env.HOST+ "/issue",
-      process.env.HOST+ "/lero",
-      process.env.HOST+ "/report",
+      req.protocol + "://" + req.headers.host + "/user",
+      req.protocol + "://" + req.headers.host + "/group",
+      req.protocol + "://" + req.headers.host + "/issue",
+      req.protocol + "://" + req.headers.host + "/lero",
+      req.protocol + "://" + req.headers.host + "/report",
     ],
   });
 });

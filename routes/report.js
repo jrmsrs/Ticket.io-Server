@@ -6,6 +6,8 @@ const router = express.Router()
 
 router.get("/", (req, res, next) => {
   const email = req.query.email
+  const auto = req.query.auto
+  
   const data = {}
   if (!email) {
     return res.status(400).send({
@@ -17,6 +19,7 @@ router.get("/", (req, res, next) => {
     if (error) return res.sendStatus(400);
     const countQuery = `
       SELECT * FROM \`report\` ORDER BY ID DESC LIMIT 1;
+      SELECT * FROM \`report\` WHERE \`id\`=1;
       SELECT count(*) as \`count\` FROM \`user\`;
       SELECT count(*) as \`count\` FROM \`group\`;
       SELECT count(*) as \`count\` FROM \`tp\`;
@@ -26,10 +29,11 @@ router.get("/", (req, res, next) => {
       conn.release();
       if (error) return res.sendStatus(500);
       data.lastReport = result[0][0]
-      data.userCount = result[1][0].count
-      data.groupCount = result[2][0].count
-      data.issueCount = result[3][0].count
-      data.solutionCount = result[4][0].count
+      data.cron = result[1][0].cron
+      data.userCount = result[2][0].count
+      data.groupCount = result[3][0].count
+      data.issueCount = result[4][0].count
+      data.solutionCount = result[5][0].count
 
       const formatSigned = (exp) => {
         if (exp == 0) return null
@@ -77,27 +81,46 @@ router.get("/", (req, res, next) => {
         `
       };
 
-      await trans.sendMail(mailOptions, (err, info) => {
-        if(err)
-          return res.status(400).send({
-            response: "Ocorreu algum problema no envio para o e-mail " + email + "."
-          })
-      });
+      const sendEmail = async() => {
+        await trans.sendMail(mailOptions, (err, info) => {
+          if(err)
+            return res.status(400).send({
+              response: "Ocorreu algum problema no envio para o e-mail " + email + "."
+            })
+        });
 
-      // Registra 
-      await axios.post(process.env.HOST+'/report', {
-        user_count: data.userCount,
-        group_count: data.groupCount,
-        issue_count: data.issueCount,
-        solution_count: data.solutionCount
-      })
-      .catch(function (error) {
-        return error
-      });
+        // Registra 
+        await axios.post(req.protocol + "://" + req.headers.host + '/report', {
+          user_count: data.userCount,
+          group_count: data.groupCount,
+          issue_count: data.issueCount,
+          solution_count: data.solutionCount
+        })
+        .catch(function (error) {
+          return error
+        });
 
-      return res.status(200).send({
-        response: "Relatório enviado para o e-mail " + email + "."
-      })
+        return res.status(200).send({
+          response: "Relatório enviado para o e-mail " + email + "."
+        })
+      }
+
+      if (!auto || (auto && data.cron == "* * * * *")){
+        return await sendEmail()
+      } else if (auto && data.cron == "0 0 * * 6") {
+        const today = new Date().toLocaleString('pt-BR', { 
+          weekday: 'long',
+          hour: 'numeric',
+          minute: 'numeric',
+        })
+        if (today == "sábado, 00:00") {
+          return await sendEmail()
+        }
+        else return res.status(400).send({
+          today: today,
+          response: `Envio automático (0 0 * * 6), será enviado um e-mail apenas quando for requisitado em 'today'=='sábado, 00:00'.`
+        })
+      }
     });
   })
 })

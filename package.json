@@ -13,7 +13,6 @@
     "lerolero": "github:jrmsrs/lerolero",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
-    "node-cron": "^3.0.2",
     "nodemailer": "^6.8.0"
   },
   "devDependencies": {
