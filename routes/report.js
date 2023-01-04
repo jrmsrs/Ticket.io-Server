@@ -116,7 +116,7 @@ router.get("/", (req, res, next) => {
         if (today == "sábado, 00:00") {
           return await sendEmail()
         }
-        else return res.status(400).send({
+        else return res.status(200).send({
           today: today,
           response: `Envio automático (0 0 * * 6), será enviado um e-mail apenas quando for requisitado em 'today'=='sábado, 00:00'.`
         })
