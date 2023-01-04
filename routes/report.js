@@ -22,7 +22,7 @@ router.get("/", (req, res, next) => {
       SELECT count(*) as \`count\` FROM \`tp\`;
       SELECT count(*) as \`count\` FROM \`solution\`;
     `
-    conn.query(countQuery, (error, result, fields) => {
+    conn.query(countQuery, async (error, result, fields) => {
       conn.release();
       if (error) return res.sendStatus(500);
       data.lastReport = result[0][0]
@@ -77,7 +77,7 @@ router.get("/", (req, res, next) => {
         `
       };
 
-      trans.sendMail(mailOptions, (err, info) => {
+      await trans.sendMail(mailOptions, (err, info) => {
         if(err)
           return res.status(400).send({
             response: "Ocorreu algum problema no envio para o e-mail " + email + "."
@@ -85,7 +85,7 @@ router.get("/", (req, res, next) => {
       });
 
       // Registra 
-      axios.post(process.env.HOST+'/report', {
+      await axios.post(process.env.HOST+'/report', {
         user_count: data.userCount,
         group_count: data.groupCount,
         issue_count: data.issueCount,
