@@ -89,7 +89,7 @@ router.get("/", (req, res, next) => {
             })
         });
 
-        // Registra 
+        // Registra no banco
         await axios.post(req.protocol + "://" + req.headers.host + '/report', {
           user_count: data.userCount,
           group_count: data.groupCount,
@@ -105,15 +105,28 @@ router.get("/", (req, res, next) => {
         })
       }
 
-      if (auto) {
-        await axios.get('https://ticket-io-auth-default-rtdb.firebaseio.com/email.json')
+      // 4x por hora atualiza os parâmetros da job Cron-Job de acordo com as entradas de e-mails
+      const minutes = new Date().toLocaleString('pt-BR', { minute: 'numeric' })
+      if (auto && (minutes == "0" || minutes == "15" || minutes == "30" || minutes == "45")) {
+        await axios.get(process.env.RTDB_ENDPOINT + '/email.json')
         .then(async (res) => {
-          const url = "https://ticket-io-server.vercel.app/report?auto=true&"
+          let url = "https://ticket-io-server.vercel.app/report?auto=true&"
           res.data.forEach(element => {
-            url.concat("email="+element+"&")
+            url = url.concat("email="+element+"&")
           });
-          url.slice(0, -1)
-          await axios.patch("https://api.cron-job.org/jobs/4146651", {url: url})
+          url = url.slice(0, -1)
+          await fetch(process.env.CRONJOB_ENDPOINT, {
+            method: 'PATCH',
+            body: JSON.stringify({
+              job: {
+                url: url,
+              }
+            }),
+            headers: {
+              'Authorization': 'Bearer '+process.env.CRONJOB_APIKEY,
+              'Content-type': 'application/json',
+            },
+          }).catch(()=>console.log("Algum problema ao acessar Cron-Job"))
         })
       }
 

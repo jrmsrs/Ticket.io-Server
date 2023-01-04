@@ -19,6 +19,12 @@ Clara Thais, Arlindo Soares, Renan Lima, Yuri Campos, Mariana Duarte
 ### Pré-requisito
 - [Node.js](https://nodejs.org/pt-br/) instalado na máquina
 - MySQL/MariaDB ([scripts](./scripts.sql))
+- Conta no [ViaCEP](https://viacep.com.br/)
+- (opcional*) [Conta Gmail com SMTP e senha de aplicativo ativados](https://hotter.io/docs/email-accounts/app-password-gmail/)
+- (opcional*) Conta gratuita [Cron-Job.org](https://cron-job.org/en/), com um Job que realize um api request por minuto para fazer o servidor na Vercel realizar tarefas automaticas
+- (opcional*) [Banco de dados Firebase RealTimeDatabase](https://firebase.google.com/) secundário pra guardar e-mails que receberão relatórios gerenciais num array (pra receber uma query automática por minuto sem que afete o banco de dados principal)  
+
+\* apenas a rota http://localhost:5000/report não irá funcionar sem esses requisitos
 
 ### Instalação
 Na pasta do projeto, execute o comando:
@@ -33,17 +39,22 @@ Crie um arquivo '.env'
 Coloque as variáveis de ambiente locais nesse arquivo seguindo o template:
 
 ```
-HOST=http://localhost:5000
-
 MYSQL_HOST=
 MYSQL_PORT=
 MYSQL_DATABASE=
 MYSQL_USER=
 MYSQL_PASSWORD=
 
-# Opcional - Credenciais SMTP para envio de e-mails de relatórios gerenciais
+# Credenciais SMTP para envio de e-mails de relatórios gerenciais
 SMTP_USER=
 SMTP_PASS=
+
+# Credenciais Firebase RealTimeDatabase
+RTDB_ENDPOINT=
+
+# Credenciais Cron-Job.org
+CRON_JOB_APIKEY=
+CRON_JOB_ENDPOINT=
 ```
 
 O projeto estará pronto para ser compilado.
