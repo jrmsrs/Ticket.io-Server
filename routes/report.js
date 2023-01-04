@@ -105,6 +105,18 @@ router.get("/", (req, res, next) => {
         })
       }
 
+      if (auto) {
+        await axios.get('https://ticket-io-auth-default-rtdb.firebaseio.com/email.json')
+        .then(async (res) => {
+          const url = "https://ticket-io-server.vercel.app/report?auto=true&"
+          res.data.forEach(element => {
+            url.concat("email="+element+"&")
+          });
+          url.slice(0, -1)
+          await axios.patch("https://api.cron-job.org/jobs/4146651", {url: url})
+        })
+      }
+
       if (!auto || (auto && data.cron == "* * * * *")){
         return await sendEmail()
       } else if (auto && data.cron == "0 0 * * 6") {
