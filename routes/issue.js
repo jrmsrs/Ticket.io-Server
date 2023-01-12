@@ -11,11 +11,12 @@ router.post("/", (req, res, next) => {
     desc: req.body.desc,
     devContact: req.body.devContact,
     prevConclusion: req.body.prevConclusion,
+    incidentsCount: req.body.incidentsCount,
   };
   mysql.getConnection((error, conn) => {
     if (error) return res.sendStatus(400);
     conn.query(
-      "INSERT INTO tp (id, group_id, title, `desc`, dev_contact, prev_conclusion) VALUES (?,?,?,?,?,?);",
+      "INSERT INTO tp (id, group_id, title, `desc`, dev_contact, prev_conclusion, incidents_count) VALUES (?,?,?,?,?,?,?);",
       [
         issue.uuid,
         issue.group,
@@ -23,6 +24,7 @@ router.post("/", (req, res, next) => {
         issue.desc,
         issue.devContact,
         issue.prevConclusion,
+        issue.incidentsCount,
       ],
       (error, result, fields) => {
         conn.release();
@@ -94,6 +96,7 @@ router.patch("/:id", (req, res, next) => {
     prev_conclusion: req.body.prevConclusion,
     conclusion: req.body.conclusion,
     root_cause: req.body.rootCause,
+    incidents_count: req.body.incidentsCount,
   };
   mysql.getConnection((error, conn) => {
     if (error) return res.sendStatus(400);
