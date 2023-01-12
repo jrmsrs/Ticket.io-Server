@@ -8,15 +8,17 @@ router.post("/", (req, res, next) => {
     uuid: crypto.randomUUID(),
     title: req.body.title,
     details: req.body.details,
+    dev_contact: req.body.devContact,
   };
   mysql.getConnection((error, conn) => {
     if (error) return res.sendStatus(400);
     conn.query(
-      "INSERT INTO solution (id, title, details) VALUES (?,?,?);",
+      "INSERT INTO solution (id, title, details, dev_contact) VALUES (?,?,?,?);",
       [
         solution.uuid,
         solution.title,
         solution.details,
+        solution.dev_contact,
       ],
       (error, result, fields) => {
         conn.release();
@@ -59,8 +61,10 @@ router.get("/:id", (req, res, next) => {
   mysql.getConnection((error, conn) => {
     if (error) return res.sendStatus(400);
     conn.query(
-      "SELECT * FROM `solution` WHERE id = ?;",
-      id,
+      `
+        SELECT * FROM \`solution\` WHERE id = '${id}';
+        SELECT id from tp where root_cause = '${id}';
+      `,
       (error, result, fields) => {
         conn.release();
         if (error) {
@@ -68,10 +72,13 @@ router.get("/:id", (req, res, next) => {
             error: error,
             response: null,
           });
+        } else if (!result[0][0]){
+          return res.status(204).send()
         }
         return res.status(200).send({
           message: "dados da solution",
-          results: result[0],
+          results: result[0][0],
+          issues: result[1].map(a => a.id)
         });
       }
     );
@@ -83,6 +90,7 @@ router.patch("/:id", (req, res, next) => {
   const solution = {
     title: req.body.title,
     details: req.body.details,
+    dev_contact: req.body.devContact,
   };
   mysql.getConnection((error, conn) => {
     if (error) return res.sendStatus(400);
