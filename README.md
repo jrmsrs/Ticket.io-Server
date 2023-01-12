@@ -109,8 +109,20 @@ O servidor rodará em [http://localhost:5000/](http://localhost:5000)X. Irá rec
 - Remover TP  
 (delete) `/issue/UUID`
 
+### Soluções
+- Obter Soluções  
+(get) `/solution`
+- Obter Solução  
+(get) `/solution/UUID`
+- Cadastrar Solução  
+(post) `/solution`
+- Alterar Solução  
+(patch) `/solution/UUID`
+- Remover Solução  
+(delete) `/solution/UUID`
+
 ### Relatórios gerenciais
-- Envio para um e-mail específico (ou array)  
+- Envio para um e-mail específico ou array  
 (get) `/report?email=EMAIL`  
 (get) `/report?email=EMAIL1&email=EMAIL2&email=EMAIL3`  
 

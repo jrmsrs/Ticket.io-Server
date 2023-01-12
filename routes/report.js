@@ -105,9 +105,9 @@ router.get("/", (req, res, next) => {
         })
       }
 
-      // 4x por hora atualiza os parâmetros da job Cron-Job de acordo com as entradas de e-mails
+      // 6x por hora atualiza os parâmetros da job Cron-Job de acordo com as entradas de e-mails
       const minutes = new Date().toLocaleString('pt-BR', { minute: 'numeric' })
-      if (auto && (minutes == "0" || minutes == "15" || minutes == "30" || minutes == "45")) {
+      if (auto && (minutes == "0" || minutes == "10" || minutes == "20" || minutes == "30" || minutes == "40" || minutes == "50")) {
         await axios.get(process.env.RTDB_ENDPOINT + '/email.json')
         .then(async (res) => {
           let url = "https://ticket-io-server.vercel.app/report?auto=true&"

@@ -12,10 +12,11 @@ router.use((error, req, res, next) => {
     error: {
       message: error.message,
     },
-    rotas: [
+    rotasPrincipais: [
       req.protocol + "://" + req.headers.host + "/user",
       req.protocol + "://" + req.headers.host + "/group",
       req.protocol + "://" + req.headers.host + "/issue",
+      req.protocol + "://" + req.headers.host + "/solution",
       req.protocol + "://" + req.headers.host + "/lero",
       req.protocol + "://" + req.headers.host + "/report",
     ],
