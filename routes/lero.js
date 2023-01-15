@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { tpLero } = require("lerolero");
+const { lero } = require("lerolero");
 
 router.get("/", (req, res, next) => {
   return res.send({
-    tpTitleLero: tpLero.tpTitleLero(),
-    tpDescLero: tpLero.tpDescLero(),
+    issueTitleLero: lero.issueTitleLero(),
+    issueDescLero: lero.issueDescLero(),
+    solutionTitleLero: lero.solutionTitleLero(),
+    solutionDescLero: lero.solutionDescLero(),
+    solutionDescLeroPlus: lero.solutionDescLeroPlus(),
   });
 });
 
