@@ -81,6 +81,25 @@ router.get('/:id', (req,res,next) => {
                 }
             )
         }
+        if(req.query.issues){
+            return conn.query(`
+                SELECT id from tp where group_id = ?;
+                `,id,
+                (error,result,fields) => {
+                    conn.release()
+                    if (error){
+                        return res.status(500).send({
+                            error: error,
+                            response: null
+                        })
+                    } 
+                    return res.status(200).send({
+                        message: "problemas associados ao grupo",
+                        results: result.map(a => a.id)
+                    })
+                }
+            )
+        }
         conn.query(
             'SELECT * FROM \`group\` WHERE id = ?;',id,
             (error,result,fields) => {
