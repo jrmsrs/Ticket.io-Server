@@ -20,20 +20,27 @@ router.get("/", (req, res, next) => {
     const countQuery = `
       SELECT * FROM \`report\` ORDER BY ID DESC LIMIT 1;
       SELECT * FROM \`report\` WHERE \`id\`=1;
-      SELECT count(*) as \`count\` FROM \`user\`;
-      SELECT count(*) as \`count\` FROM \`group\`;
-      SELECT count(*) as \`count\` FROM \`tp\`;
-      SELECT count(*) as \`count\` FROM \`solution\`;
+      SELECT count(*) AS \`res\` FROM \`user\`;
+      SELECT count(*) AS \`res\` FROM \`group\`;
+      SELECT count(*) AS \`res\` FROM \`tp\`;
+      SELECT count(*) AS \`res\` FROM \`solution\`;
+      SELECT count(*) AS \`res\` FROM \`tp\` WHERE \`tp\`.\`root_cause\` IS NULL AND (\`tp\`.prev_conclusion-current_timestamp) < 0;
+      SELECT count(*) AS \`res\` FROM \`tp\` WHERE \`tp\`.\`root_cause\` IS NOT NULL;
+      SELECT avg(timestampdiff(DAY, created_at, conclusion)) AS \`res\` from \`tp\` where \`tp\`.\`conclusion\` is not null;
     `
     conn.query(countQuery, async (error, result, fields) => {
       conn.release();
       if (error) return res.sendStatus(500);
       data.lastReport = result[0][0]
       data.cron = result[1][0].cron
-      data.userCount = result[2][0].count
-      data.groupCount = result[3][0].count
-      data.issueCount = result[4][0].count
-      data.solutionCount = result[5][0].count
+      data.userCount = result[2][0].res
+      data.groupCount = result[3][0].res
+      data.issueCount = result[4][0].res
+      data.solutionCount = result[5][0].res
+      data.issueLateCount = result[6][0].res
+      data.issueFinishedCount = result[7][0].res
+      data.issueConclusionAvg = result[8][0].res
+      data.issueUnfCount = data.issueCount - data.issueFinishedCount
 
       const formatSigned = (exp) => {
         if (exp == 0) return null
@@ -47,6 +54,10 @@ router.get("/", (req, res, next) => {
       const groupsAdded = formatSigned(data.groupCount - data.lastReport.group_count)
       const issuesAdded = formatSigned(data.issueCount - data.lastReport.issue_count)
       const solutionsAdded = formatSigned(data.solutionCount - data.lastReport.solution_count)
+      const issueLateDiff = formatSigned(data.issueLateCount - data.lastReport.late_issues)
+      const issueFinishedDiff = formatSigned(data.issueFinishedCount - data.lastReport.solved_issues)
+      const issueConclusionDiff = formatSigned(data.issueConclusionAvg - data.lastReport.solving_issues_avg)
+      const issueUnfDiff = formatSigned(data.issueUnfCount - (data.lastReport.issue_count - data.lastReport.solved_issues))
 
       const trans = nodemailer.createTransport({ 
         service: 'gmail', 
@@ -72,10 +83,10 @@ router.get("/", (req, res, next) => {
             <p>Tickets de Problemas: ${data.issueCount} ${(issuesAdded) ? issuesAdded : ""}</p>
             <p>Soluções de Causa-Raiz: ${data.solutionCount} ${(solutionsAdded) ? solutionsAdded : ""}</p>
             <h4>Resumo</h4>
-            <p>Problemas solucionados: </p>
-            <p>Tempo médio de fechamento de problemas: </p>
-            <p>Problemas em aberto: </p>
-            <p style="padding-bottom: 16px">Problemas em aberto com atraso: </p>
+            <p>Problemas solucionados: ${data.issueFinishedCount} ${(issueFinishedDiff) ? issueFinishedDiff : ""}</p>
+            <p>Tempo médio de fechamento de problemas (em dias): ${data.issueConclusionAvg} ${(issueConclusionDiff) ? issueConclusionDiff : ""}</p>
+            <p>Problemas em aberto: ${data.issueUnfCount} ${(issueUnfDiff) ? issueUnfDiff : ""}</p>
+            <p style="padding-bottom: 16px">Problemas em aberto com atraso: ${data.issueLateCount} ${(issueLateDiff) ? issueLateDiff : ""}</p>
             <pre>Use Ctrl+P para imprimir/salvar o relatório em PDF</pre>
           </div>
         `
@@ -94,7 +105,10 @@ router.get("/", (req, res, next) => {
           user_count: data.userCount,
           group_count: data.groupCount,
           issue_count: data.issueCount,
-          solution_count: data.solutionCount
+          solution_count: data.solutionCount,
+          solved_issues: data.issueFinishedCount,
+          solving_issues_avg: data.issueConclusionAvg,
+          late_issues: data.issueLateCount,
         })
         .catch(function (error) {
           return error
@@ -156,9 +170,9 @@ router.post("/", (req, res, next) => {
     group_count: req.body.group_count,
     issue_count: req.body.issue_count,
     solution_count: req.body.solution_count,
-    solved_issues: 0,
-    solving_issues_avg: 0,
-    late_issues: 0
+    solved_issues: req.body.solved_issues,
+    solving_issues_avg: req.body.solving_issues_avg,
+    late_issues: req.body.late_issues
   };
   mysql.getConnection((error, conn) => {
     if (error) return res.sendStatus(400);

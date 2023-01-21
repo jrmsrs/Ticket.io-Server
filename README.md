@@ -5,6 +5,8 @@
 
 ###  [Repositório Backend 🖥️](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Server) | [Repositório Frontend 💻](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Client)
 
+Aplicação web com soluções de gerenciamento de problemas voltados para desenvolvedores divididos em grupos solucionadores
+
 ## 👥 Grupo 3 
 Clara Thais, Arlindo Soares, Renan Lima, Yuri Campos, Mariana Duarte
 
@@ -16,7 +18,7 @@ Clara Thais, Arlindo Soares, Renan Lima, Yuri Campos, Mariana Duarte
 
 ## ❓ Guia
 
-### Pré-requisito
+### ⚙️ Pré-requisito
 - [Node.js](https://nodejs.org/pt-br/) instalado na máquina
 - MySQL/MariaDB ([scripts](./scripts.sql))
 - Conta no [ViaCEP](https://viacep.com.br/)
@@ -26,7 +28,7 @@ Clara Thais, Arlindo Soares, Renan Lima, Yuri Campos, Mariana Duarte
 
 \* apenas a rota http://localhost:5000/report não irá funcionar sem esses requisitos
 
-### Instalação
+### 🔽 Instalação
 Na pasta do projeto, execute o comando:
 
 `npm install`
@@ -59,7 +61,7 @@ CRON_JOB_ENDPOINT=
 
 O projeto estará pronto para ser compilado.
 
-### Rodar o projeto
+### 🚀 Rodar o projeto
 
 Na pasta do projeto, execute o comando:
 
