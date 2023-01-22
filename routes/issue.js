@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const mysql = require("../mysql").pool;
 const crypto = require("node:crypto");
+const { google } = require('googleapis');
+const drive = google.drive('v3');
+const fs = require('fs')
+const { Readable } =  require('stream')
 
 router.post("/", (req, res, next) => {
   const issue = {
@@ -86,7 +90,7 @@ router.get("/:id", (req, res, next) => {
   });
 });
 
-router.patch("/:id", (req, res, next) => {
+router.patch("/:id", async (req, res, next) => {
   const id = req.params.id;
   const issue = {
     group_id: req.body.group,
@@ -98,8 +102,84 @@ router.patch("/:id", (req, res, next) => {
     root_cause: req.body.rootCause,
     incidents_count: req.body.incidentsCount,
   };
+  if (req.query.upload){
+    const upload = async() => {
+      try {
+        // Authenticate with the Service Account
+        const auth = new google.auth.GoogleAuth({
+          credentials: JSON.parse(process.env.DRIVEAPI_KEY),
+          scopes: ['https://www.googleapis.com/auth/drive']
+        });
+  
+        // Read the file to be uploaded
+        const file = req.files.file;
+  
+        // Create the file metadata
+        const fileMetadata = {
+          name: file.name,
+          parents: [process.env.DRIVEAPI_DIR_ID]
+        };
+  
+        // Upload the file
+        const upload = await drive.files.create({
+          auth,
+          resource: fileMetadata,
+          media: {
+            body: Readable.from(Buffer.from( file.data, 'base64'))
+          }
+        });
+        console.log(upload.data.id)
+        return upload.data.id;
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error uploading file' });
+        return null;
+      }
+    }
+    
+    await upload()
+    .then((driveDocId)=>{
+      mysql.getConnection((error, conn) => {
+        if (error) return res.sendStatus(400);
+          return conn.query(`UPDATE tp SET drive_doc_id = '${driveDocId}' WHERE id = '${id}'`, 
+          (error, result, fields) => {
+            conn.release();
+            if (error) {
+              return res.status(500).send({
+                error: error,
+                response: null,
+              });
+            }
+            return res.status(202).send({
+              message: "upload efetuado. issue com ID=" + id + " associado ao arquivo id = "+ driveDocId + ".",
+            });
+          })
+      });
+    })
+    return
+  }
   mysql.getConnection((error, conn) => {
     if (error) return res.sendStatus(400);
+    if (req.query.reincident){
+      return conn.query(`
+        UPDATE tp 
+        SET incidents_count = incidents_count + ${issue.incidents_count}, conclusion = NULL, root_cause = NULL
+        WHERE id = '${id}';
+      `, 
+      (error, result, fields) => {
+        conn.release();
+        if (error) {
+          return res.status(500).send({
+            error: error,
+            response: null,
+          });
+        }
+        return res.status(202).send({
+          message: "issue com ID=" + id + " alterado com sucesso.",
+        });
+      })
+    }
+
     let sqlQuery = `UPDATE tp SET`;
     Object.entries(issue).forEach(([key, value]) => {
       if (value) sqlQuery += ` \`${key}\` = "${value}",`;

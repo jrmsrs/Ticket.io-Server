@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
+const fileupload = require("express-fileupload");
 
 const routeUser = require("./routes/user");
 const routeGroup = require("./routes/group");
@@ -15,6 +16,7 @@ const routeNotFound = require("./routes/notFound");
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(fileupload());
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
