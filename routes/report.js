@@ -4,6 +4,70 @@ const axios = require("axios")
 const mysql = require("../mysql").pool;
 const router = express.Router()
 
+router.get("/:id", (req, res, next) => {
+  const id = req.params.id;
+  let data = {}
+      // SELECT count(*) AS \`res\` FROM \`user\`;
+      // SELECT count(*) AS \`res\` FROM \`group\`;
+      // SELECT count(*) AS \`res\` FROM \`tp\`;
+      // SELECT count(*) AS \`res\` FROM \`solution\`;
+      // SELECT count(*) AS \`res\` FROM \`tp\` WHERE \`tp\`.\`root_cause\` IS NULL AND (\`tp\`.prev_conclusion-current_timestamp) < 0;
+      // SELECT count(*) AS \`res\` FROM \`tp\` WHERE \`tp\`.\`root_cause\` IS NOT NULL;
+      // SELECT avg(timestampdiff(DAY, created_at, conclusion)) AS \`res\` from \`tp\` where \`tp\`.\`conclusion\` is not null;
+  const query = `
+      SELECT \`group\`.\`id\` as id, \`group\`.\`name\` as name FROM \`group_users\` 
+      INNER JOIN \`group\` ON \`group_users\`.\`group_id\` = \`group\`.\`id\`
+      WHERE \`group_users\`.\`user_id\` = '${id}';
+
+      SELECT 
+        \`user\`.\`id\` as \`user_id\`, 
+        \`tp\`.\`id\` as \`tp_id\`, 
+        \`group\`.\`id\` as \`group_id\`, 
+        \`user\`.\`name\` as \`user_name\`, 
+        \`tp\`.\`title\` as \`tp_title\`, 
+        \`group\`.\`name\` as \`group_name\`,
+        \`tp\`.\`prev_conclusion\` as \`tp_prev_conclusion\`
+      FROM \`user\` 
+      INNER JOIN \`group_users\` ON \`user\`.\`id\` = \`group_users\`.\`user_id\` 
+      INNER JOIN \`group\` ON \`group_users\`.\`group_id\` = \`group\`.\`id\`
+      INNER JOIN \`tp\` ON \`group\`.\`id\` = \`tp\`.\`group_id\`
+      WHERE \`user\`.\`id\` = '${id}' and \`tp\`.\`conclusion\` is null;
+
+      SELECT * FROM tp WHERE conclusion IS NULL AND author = '${id}';
+    `
+  mysql.getConnection((error, conn) => {
+    if (error) return res.sendStatus(400);
+    conn.query(query, async (error, result, fields) => {
+      conn.release();
+      if (error) {
+        return res.status(500).send({
+          error: error,
+          response: null,
+        });
+      }
+      // data.userCount = result[0][0].res
+      // data.groupCount = result[1][0].res
+      // data.issueCount = result[2][0].res
+      // data.solutionCount = result[3][0].res
+      // data.issueLateCount = result[4][0].res
+      // data.issueFinishedCount = result[5][0].res
+      // data.issueConclusionAvg = result[6][0].res
+      // data.issueUnfCount = data.issueCount - data.issueFinishedCount
+      data.userGroups = result[0]
+      data.userOngoingTp = result[1]
+      // data.userOngoingTpLate = data.userOngoingTp.filter(el => {
+      //   return (new Date(el.tp_prev_conclusion)-new Date()<0);
+      // });
+      data.userCreatedOngoingTp = result[2]
+      
+      return res.status(200).send({
+        message: "estatisticas",
+        result: data,
+      });
+    });
+  });
+});
+
 router.get("/", (req, res, next) => {
   const email = req.query.email
   const auto = req.query.auto
@@ -11,7 +75,7 @@ router.get("/", (req, res, next) => {
   const data = {}
   if (!email) {
     return res.status(400).send({
-        response: "Email não informado."
+      response: "Email não informado."
     })
   }
 
@@ -144,6 +208,8 @@ router.get("/", (req, res, next) => {
         })
       }
 
+      console.log("okkk")
+
       if (!auto || (auto && data.cron == "* * * * *")){
         return await sendEmail()
       } else if (auto && data.cron == "0 0 * * 6") {
@@ -159,7 +225,9 @@ router.get("/", (req, res, next) => {
           today: today,
           response: `Envio automático (0 0 * * 6), será enviado um e-mail apenas quando for requisitado em 'today'=='sábado, 00:00'.`
         })
-      }
+      } else return res.status(200).send({
+        response: `????`
+      })
     });
   })
 })

@@ -16,11 +16,12 @@ router.post("/", (req, res, next) => {
     devContact: req.body.devContact,
     prevConclusion: req.body.prevConclusion,
     incidentsCount: req.body.incidentsCount,
+    author: req.body.author
   };
   mysql.getConnection((error, conn) => {
     if (error) return res.sendStatus(400);
     conn.query(
-      "INSERT INTO tp (id, group_id, title, `desc`, dev_contact, prev_conclusion, incidents_count) VALUES (?,?,?,?,?,?,?);",
+      "INSERT INTO tp (id, group_id, title, `desc`, dev_contact, prev_conclusion, incidents_count, author) VALUES (?,?,?,?,?,?,?,?);",
       [
         issue.uuid,
         issue.group,
@@ -29,6 +30,7 @@ router.post("/", (req, res, next) => {
         issue.devContact,
         issue.prevConclusion,
         issue.incidentsCount,
+        issue.author,
       ],
       (error, result, fields) => {
         conn.release();
