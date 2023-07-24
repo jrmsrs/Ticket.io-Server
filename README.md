@@ -1,7 +1,10 @@
 ###### <p align="center">[Projetos e Construção de Sistemas 2022.2](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2)</p>
 
-<img src="./logo-light.png#gh-light-mode-only" alt="logo" style="width:100%">
-<img src="./logo-dark.png#gh-dark-mode-only" alt="logo" style="width:100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./logo-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./logo-light.png">
+  <img alt="logo" src="./logo-light.png" style="width:100%">
+</picture>
 
 ###  [Repositório Backend 🖥️](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Server) | [Repositório Frontend 💻](https://github.com/Projeto-e-Construcao-de-Sistemas-2022-2/Grupo3-Ticket.io-Client)
 

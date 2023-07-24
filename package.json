@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "dev": "nodemon -L src/server.js"
@@ -16,9 +16,13 @@
     "nodemailer": "^6.9.3"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "dotenv": "^16.3.1",
     "morgan": "^1.10.0",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "standard": "^17.1.0"
   },
-  "author": "jrmsrs"
+  "type": "module",
+  "author": "jrmsrs",
+  "packageManager": "yarn@3.6.1"
 }

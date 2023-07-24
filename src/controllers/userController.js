@@ -1,103 +1,122 @@
-const express = require('express')
-const router = express.Router()
-const mysql = require('../mysql').pool
-const crypto = require('node:crypto')
+import { randomUUID } from 'node:crypto'
 
-router.post('/', (req, res, next) => {
+import { pool as mysql } from '../mysql.js'
+
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const createUser = (req, res, next) => {
   const user = {
-    uuid: req.body.uuid || crypto.randomUUID(),
+    uuid: req.body.uuid || randomUUID(),
     name: req.body.name,
     email: req.body.email,
     cpf: req.body.cpf,
     cep: req.body.cep
   }
   mysql.getConnection((error, conn) => {
-    if (error) return res.sendStatus(400);
+    if (error) return res.sendStatus(400)
     conn.query(
-      'INSERT INTO user (id, name, email, cpf, cep) VALUES (?,?,?,?,?);', 
+      'insert into user (id, name, email, cpf, cep) values (?,?,?,?,?);',
       [user.uuid, user.name, user.email, user.cpf, user.cep],
       (error, result, fields) => {
         conn.release()
         if (error) {
           return res.status(500).send({
-            error: error,
+            error,
             response: null
           })
         }
         return res.status(201).send({
-          message: "user inserido",
+          message: 'user inserido',
           id: user.uuid
         })
       }
     )
   })
-})
+}
 
-router.get('/', (req, res, next) => {
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getAllUsers = (req, res, next) => {
   mysql.getConnection((error, conn) => {
-    if (error) return res.sendStatus(400);
+    if (error) return res.sendStatus(400)
     if (req.query.email) {
       const email = req.query.email
       return conn.query(
-        'SELECT * FROM user WHERE email=?;', email,
+        'select * from user where email=?;', email,
         (error, result, fields) => {
           conn.release()
           if (error) {
             return res.status(500).send({
-              error: error,
+              error,
               response: null
             })
           }
           return res.status(200).send({
-            message: "dados do user com e-mail = " + email,
+            message: 'dados do user com e-mail = ' + email,
             results: result[0]
           })
         }
       )
     }
     conn.query(
-      'SELECT * FROM user;',
+      'select * from user;',
       (error, result, fields) => {
         conn.release()
         if (error) {
           return res.status(500).send({
-            error: error,
+            error,
             response: null
           })
         }
         return res.status(200).send({
-          message: "dado dos users",
+          message: 'dado dos users',
           results: result
         })
       }
     )
   })
-})
+}
 
-router.get('/:id', (req, res, next) => {
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getUser = (req, res, next) => {
   const id = req.params.id
   mysql.getConnection((error, conn) => {
-    if (error) return res.sendStatus(400);
+    if (error) return res.sendStatus(400)
     conn.query(
-      'SELECT * FROM user WHERE id = ?;', id,
+      'select * from user where id = ?;', id,
       (error, result, fields) => {
         conn.release()
         if (error) {
           return res.status(500).send({
-            error: error,
+            error,
             response: null
           })
         }
         return res.status(200).send({
-          message: "dados do user",
+          message: 'dados do user',
           results: result[0]
         })
       }
     )
   })
-})
+}
 
-router.patch('/:id', (req, res, next) => {
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const updateUser = (req, res, next) => {
   const id = req.params.id
   const user = {
     name: req.body.name,
@@ -106,55 +125,61 @@ router.patch('/:id', (req, res, next) => {
     cep: req.body.cep
   }
   mysql.getConnection((error, conn) => {
-    if (error) return res.sendStatus(400);
-    let sqlQuery = `UPDATE user SET`
+    if (error) return res.sendStatus(400)
+    let sqlQuery = 'update user update'
     Object.entries(user).forEach(([key, value]) => {
       if (value) sqlQuery += ` ${key} = "${value}",`
     }) // mapeia apenas os campos alterados
     sqlQuery = sqlQuery.slice(0, -1) // remove ultima vírgula
-    sqlQuery += ` WHERE id = '${id}'`
+    sqlQuery += ` where id = '${id}'`
     conn.query(
       sqlQuery, (error, result, fields) => {
         conn.release()
         if (error) {
           return res.status(500).send({
-            error: error,
+            error,
             response: null
           })
         }
         return res.status(202).send({
-          message: "user com ID=" + id + " alterado com sucesso."
+          message: 'user com ID=' + id + ' alterado com sucesso.'
         })
       }
     )
   })
-})
+}
 
-router.delete('/:id', (req, res, next) => {
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const deleteUser = (req, res, next) => {
   const id = req.params.id
   mysql.getConnection((error, conn) => {
-    if (error) return res.sendStatus(400);
+    if (error) return res.sendStatus(400)
     conn.query(
-      'DELETE FROM user WHERE id = ?;', id,
+      'update from user where id = ?;', id,
       (error, result, fields) => {
         conn.release()
         if (error) {
           return res.status(500).send({
-            error: error,
+            error,
             response: null
           })
         }
-        if (result.affectedRows > 0)
+        if (result.affectedRows > 0) {
           return res.status(202).send({
-            message: "user com ID=" + id + " removido com sucesso."
+            message: 'user com ID=' + id + ' removido com sucesso.'
           })
-        else
+        } else {
           return res.status(204).send({
-            message: "user com ID=" + id + " não existe."
+            message: 'user com ID=' + id + ' não existe.'
           })
+        }
       }
     )
   })
-})
+}
 
-module.exports = router
+export { createUser, getAllUsers, getUser, updateUser, deleteUser }
