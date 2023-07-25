@@ -164,8 +164,10 @@ const sendReport = (req, res, next) => {
           solving_issues_avg: data.issueConclusionAvg,
           late_issues: data.issueLateCount
         })
-          .catch(function (error) {
-            return error
+          .catch(() => {
+            return res.status(400).send({
+              response: 'Ocorreu algum problema no registro do relatório no banco de dados.'
+            })
           })
 
         return res.status(200).send({
@@ -178,7 +180,7 @@ const sendReport = (req, res, next) => {
       if (auto && (minutes === '0' || minutes === '10' || minutes === '20' || minutes === '30' || minutes === '40' || minutes === '50')) {
         await axios.get(process.env.RTDB_ENDPOINT + '/email.json')
           .then(async (res) => {
-            let url = 'https://ticket-io-server.vercel.app/report?auto=true&'
+            let url = 'https://ticket-io-server-git-refatorada-jrmsrs.vercel.app/report?auto=true&'
             res.data.forEach(element => {
               url = url.concat('email=' + element + '&')
             })
